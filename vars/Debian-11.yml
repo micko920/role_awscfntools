@@ -1,0 +1,8 @@
+---
+__awscfntools_bin_path: "/usr/local/bin"
+__awscfntools_config_path: "/etc/cfn"
+__awscfntools_python_packages:
+  - "https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-latest.tar.gz"
+__awscfntools_packages:
+  - python3-setuptools
+

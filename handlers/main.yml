@@ -1,0 +1,4 @@
+---
+- name: restart awscfntools
+  systemd: "name=awscfntools state={{ awscfntools_restart_handler_state }}"
+  when: systemd_pid_1 is defined and systemd_pid_1

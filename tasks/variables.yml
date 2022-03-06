@@ -1,0 +1,29 @@
+---
+# Variable configuration.
+- name: Check os and version
+  debug:
+    msg: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('-')[0].split('.')[0] }}"
+
+- name: Include OS-specific variables (Debian).
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_version.split('-')[0].split('.')[0] }}.yml"
+  when: ansible_os_family == 'Debian'
+
+- name: Define awscfntools_packages.
+  set_fact:
+    awscfntools_packages: "{{ __awscfntools_packages | list }}"
+  when: awscfntools_packages is not defined
+
+- name: Define awscfntools_python_packages
+  set_fact:
+    awscfntools_python_packages: "{{ __awscfntools_python_packages}}"
+  when: awscfntools_python_packages is not defined
+
+- name: Define awscfntools_bin_path.
+  set_fact:
+    awscfntools_bin_path: "{{ __awscfntools_bin_path }}"
+  when: awscfntools_bin_path is not defined
+
+- name: Define awscfntools_config_path.
+  set_fact:
+    awscfntools_config_path: "{{ __awscfntools_config_path }}"
+  when: awscfntools_config_path is not defined

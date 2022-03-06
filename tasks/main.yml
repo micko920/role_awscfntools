@@ -1,0 +1,46 @@
+---
+- include_tasks: is_systemd.yml
+
+# Variable configuration.
+- include_tasks: variables.yml
+
+- name: Install awscfntools.
+  apt:
+    name: "{{ awscfntools_packages }}"
+    state: present
+
+- name: install awscfntools pip3 packages
+  pip:
+    name: "{{ awscfntools_python_packages }}"
+    executable: pip3
+    state: present
+  when: (awscfntools_python_packages is defined) and (awscfntools_python_packages|length > 0)
+
+- name: create cfn-hup service instance
+  import_role:
+    name: micko920.role_createservice
+  vars:
+    service_list:
+      - name: "cfn-hup"
+        description: "cfn-hup daemon"
+        documentation: "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-helper-scripts-reference.html"
+        start_command: "/usr/local/bin/cfn-hup"
+        type: "simple"
+        user_name: "root"
+        group_name: "root"
+        after: "network.target network-online.target"
+        requires: "multi-user.target"
+        extra_values:
+          Restart: "always"
+  when: systemd_pid_1 is defined and systemd_pid_1
+
+- name: Ensure awscfntools is started and enabled at boot.
+  systemd:
+    name: cfn-hup
+    state: "{{ awscfntools_service_state }}"
+    enabled: "{{ awscfntools_service_enabled }}"
+  when: systemd_pid_1 is defined and systemd_pid_1
+
+- name: Ensure handlers are notified now to avoid firewall conflicts.
+  meta: flush_handlers
+
