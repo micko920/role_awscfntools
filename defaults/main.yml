@@ -1,6 +1,6 @@
 ---
 # Service options.
 awscfntools_service_state: stopped
-awscfntools_service_enabled: true
+awscfntools_service_enabled: false
 awscfntools_restart_handler_state: restarted
 
